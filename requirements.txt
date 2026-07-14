@@ -1,0 +1,25 @@
+# PlastiVision AI — Python Dependencies
+# Install with: pip install -r requirements.txt
+#
+# Note on PyTorch:
+#   - CPU only (default): pip install torch torchvision
+#   - CUDA 12.x (GPU):   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#   The lines below install CPU version. For GPU, replace torch/torchvision lines.
+
+# ── Web framework ─────────────────────────────────────────────────────────────
+flask>=2.3.0
+flask-cors>=4.0.0
+
+# ── Deep Learning ─────────────────────────────────────────────────────────────
+torch>=2.0.0
+torchvision>=0.15.0
+timm>=0.9.0          # Vision Transformer (ViT) library — NOT a CNN
+
+# ── Image processing ──────────────────────────────────────────────────────────
+Pillow>=10.0.0
+numpy>=1.24.0
+
+# ── Evaluation & Metrics ─────────────────────────────────────────────────────
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+seaborn>=0.12.0

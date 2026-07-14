@@ -1,0 +1,8 @@
+# This directory stores trained model artifacts.
+# After running: cd backend && python train.py
+#
+# You will find:
+#   best_model.pth          ← Trained ViT weights
+#   class_names.json        ← List of class names
+#   training_history.json   ← Loss/accuracy per epoch
+#   evaluation/             ← Metrics, plots, confusion matrix
