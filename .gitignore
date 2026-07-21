@@ -36,3 +36,14 @@ env/
 .coverage
 htmlcov/
 
+# ── Large ML files (excluded from deployment) ──────────────────────────────────
+# PyTorch model — not used in production (Flask uses tensorflow/Keras)
+backend/saved_model/best_model.pth
+# Raw dataset — too large for git (14k images)
+Final_Dataset/
+dataset/raw/
+# Training run outputs (logs, checkpoints, plots)
+cnn/
+vit/
+# Environment files with secrets
+.env.local

@@ -21,36 +21,25 @@ DATASET_DIR     = os.path.join(PROJECT_ROOT, "dataset", "raw")
 SAVED_MODEL_DIR = os.path.join(BASE_DIR, "saved_model")
 EVAL_DIR        = os.path.join(BASE_DIR, "saved_model", "evaluation")
 
-MODEL_PATH       = os.path.join(SAVED_MODEL_DIR, "best_model.pth")
+MODEL_PATH       = os.path.join(SAVED_MODEL_DIR, "best_model.keras")
 CLASS_NAMES_PATH = os.path.join(SAVED_MODEL_DIR, "class_names.json")
 HISTORY_PATH     = os.path.join(SAVED_MODEL_DIR, "training_history.json")
 
 # ── Dataset ─────────────────────────────────────────────────────────────────────
 # Folder names inside DATASET_DIR (case-sensitive on Linux)
-CLASS_NAMES = ["O", "R"]          # Organic=O, Recycle=R (Kaggle waste dataset layout)
+CLASS_NAMES = ["Biodegradable", "Non_Biodegradable"]
 
 # Mapping: class folder name → display info
 # When you replace the dataset, update this dict accordingly.
 WASTE_MAPPING = {
-    "O": {
+    "Biodegradable": {
         "detected_object": "Organic Waste",
         "waste_category":  "Biodegradable",
         "recommended_bin": "Compost Bin",
     },
-    "R": {
+    "Non_Biodegradable": {
         "detected_object": "Recyclable Waste",
-        "waste_category":  "Non-Biodegradable",
-        "recommended_bin": "Recycle Bin",
-    },
-    # Aliases for alternative dataset layouts
-    "ORGANIC": {
-        "detected_object": "Organic Waste",
-        "waste_category":  "Biodegradable",
-        "recommended_bin": "Compost Bin",
-    },
-    "RECYCLE": {
-        "detected_object": "Recyclable Waste",
-        "waste_category":  "Non-Biodegradable",
+        "waste_category":  "Non_Biodegradable",
         "recommended_bin": "Recycle Bin",
     },
 }

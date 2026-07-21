@@ -27,27 +27,21 @@ function saveScanToStorage(result) {
 }
 
 // ─── API call ─────────────────────────────────────────────────────────────────
+import { predictImage } from '../services/api';
+
 const BACKEND_AVAILABLE_KEY = 'pv_backend_ok';
 
 async function callPredictAPI(imageData, isBase64 = false) {
-  const formData = new FormData();
+  let fileOrBlob;
   if (isBase64) {
     // Convert base64 dataURL to Blob for camera captures
     const res = await fetch(imageData);
-    const blob = await res.blob();
-    formData.append('image', blob, 'capture.jpg');
+    fileOrBlob = await res.blob();
   } else {
-    formData.append('image', imageData);
+    fileOrBlob = imageData;
   }
-  const response = await fetch('/api/predict', {
-    method: 'POST',
-    body: formData,
-  });
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.error || `Server error ${response.status}`);
-  }
-  const data = await response.json();
+  
+  const data = await predictImage(fileOrBlob);
   return {
     object: data.detected_object,
     category: data.waste_category,

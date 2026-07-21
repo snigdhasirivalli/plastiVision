@@ -1,0 +1,10 @@
+# Flask + TensorFlow CPU — for Render deployment
+# This is intentionally slim (no PyTorch, no timm, no GPU).
+# Full dev dependencies are in requirements.txt at project root.
+
+flask>=2.3.0
+flask-cors>=4.0.0
+tensorflow-cpu>=2.13.0
+Pillow>=10.0.0
+numpy>=1.24.0
+gunicorn>=21.0.0

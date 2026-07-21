@@ -10,6 +10,7 @@ const BIN_CONFIG = {
 
 const CATEGORY_CONFIG = {
   'Non-Biodegradable': { bg: 'bg-red-50 dark:bg-red-900/20', text: 'text-red-700 dark:text-red-300', border: 'border-red-300 dark:border-red-600', dot: 'bg-red-500' },
+  'Non_Biodegradable': { bg: 'bg-red-50 dark:bg-red-900/20', text: 'text-red-700 dark:text-red-300', border: 'border-red-300 dark:border-red-600', dot: 'bg-red-500' },
   'Biodegradable': { bg: 'bg-green-50 dark:bg-green-900/20', text: 'text-green-700 dark:text-green-300', border: 'border-green-300 dark:border-green-600', dot: 'bg-green-500' },
 };
 

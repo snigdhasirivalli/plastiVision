@@ -7,10 +7,12 @@ export default defineConfig({
   server: {
     proxy: {
       // Proxy /api/* requests to Flask backend during development
+      // Flask routes are at http://localhost:5000/api/* (url_prefix="/api")
+      // So we forward WITHOUT stripping the /api prefix.
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        // No rewrite: /api/predict → http://localhost:5000/api/predict ✓
       },
     },
   },

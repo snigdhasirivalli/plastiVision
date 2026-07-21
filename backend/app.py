@@ -6,12 +6,17 @@ Run:
     python app.py
 
 The server will start on http://localhost:5000
-The React frontend proxies /api/* → http://localhost:5000/*
+Flask routes:
+  GET  /                      → root info
+  GET  /api/health            → model status
+  POST /api/predict           → image classification
+  GET  /api/dashboard         → analytics data
+  GET  /api/model-performance → evaluation metrics
 """
 import os
 import sys
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 
 # Ensure backend/ is importable from project root too
@@ -23,23 +28,26 @@ from api.predict import predict_bp, init_model
 app = Flask(__name__)
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
-# Allow the React dev server (port 5173) and any origin in production.
-CORS(app, resources={r"/*": {"origins": ["http://localhost:5173",
-                                          "http://127.0.0.1:5173",
-                                          "http://localhost:3000"]}})
+# Allow all origins so both Vite proxy and direct Axios calls work
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # ── Register blueprints ───────────────────────────────────────────────────────
-# All routes prefixed with nothing (Vite proxy rewrites /api → /)
-app.register_blueprint(predict_bp)
+# Prefix /api so routes match the frontend Axios calls exactly:
+#   POST http://127.0.0.1:5000/api/predict
+#   GET  http://127.0.0.1:5000/api/health
+#   GET  http://127.0.0.1:5000/api/dashboard
+#   GET  http://127.0.0.1:5000/api/model-performance
+app.register_blueprint(predict_bp, url_prefix="/api")
 
-# ── Root health check ─────────────────────────────────────────────────────────
+# ── Root info ─────────────────────────────────────────────────────────────────
 @app.route("/", methods=["GET"])
 def index():
-    return {"service": "PlastiVision AI Backend", "version": "1.0.0"}, 200
+    return jsonify({"service": "PlastiVision AI Backend", "version": "1.0.0"}), 200
+
 
 # ── Load model on startup ─────────────────────────────────────────────────────
 print("[PlastiVision] Starting Flask server...")
-print("[PlastiVision] Loading ViT model...")
+print("[PlastiVision] Loading best_model.keras (Custom CNN)...")
 init_model()
 print(f"[PlastiVision] Server ready at http://{FLASK_HOST}:{FLASK_PORT}")
 

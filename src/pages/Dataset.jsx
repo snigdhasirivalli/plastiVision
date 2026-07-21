@@ -3,30 +3,29 @@ import { motion } from 'framer-motion';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell
 } from 'recharts';
-import { Database, Image, BookOpen, CheckCircle2 } from 'lucide-react';
+import { Database, Image, BookOpen, CheckCircle2, Layers } from 'lucide-react';
 
+// ── Actual dataset statistics ─────────────────────────────────────────────────
 const CLASSES = [
-  { name: 'Banana Peel', type: 'Bio', count: 320, color: '#FFD54F' },
-  { name: 'Orange Peel', type: 'Bio', count: 298, color: '#FF9800' },
-  { name: 'Apple Core', type: 'Bio', count: 285, color: '#EF5350' },
-  { name: 'Tea Bag', type: 'Bio', count: 264, color: '#8D6E63' },
-  { name: 'Eggshell', type: 'Bio', count: 271, color: '#E8F5E9' },
-  { name: 'Plastic Bottle', type: 'Non-Bio', count: 342, color: '#1565C0' },
-  { name: 'Plastic Wrapper', type: 'Non-Bio', count: 318, color: '#7986CB' },
-  { name: 'Plastic Cup', type: 'Non-Bio', count: 305, color: '#26C6DA' },
-  { name: 'Plastic Container', type: 'Non-Bio', count: 289, color: '#AB47BC' },
-  { name: 'Plastic Bag', type: 'Non-Bio', count: 308, color: '#EC407A' },
+  { name: 'Biodegradable',     type: 'Bio',     count: 12565, color: '#2E7D32' },
+  { name: 'Non-Biodegradable', type: 'Non-Bio', count: 1923,  color: '#C62828' },
 ];
 
 const INFO_CARDS = [
-  { label: 'Dataset Name', value: 'PlastiVision Waste Dataset', icon: Database, color: 'green' },
-  { label: 'Total Classes', value: '10', icon: BookOpen, color: 'blue' },
-  { label: 'Total Images', value: '3,000 (est.)', icon: Image, color: 'purple' },
-  { label: 'Self-Collected', value: '~1,500', icon: CheckCircle2, color: 'teal' },
-  { label: 'Public Dataset', value: '~1,500', icon: Database, color: 'orange' },
-  { label: 'Training Images', value: '2,400', icon: Image, color: 'green' },
-  { label: 'Validation Images', value: '300', icon: Image, color: 'blue' },
-  { label: 'Testing Images', value: '300', icon: Image, color: 'red' },
+  { label: 'Dataset Name',        value: 'PlastiVision AI Waste Dataset', icon: Database,     color: 'green'  },
+  { label: 'Total Images',         value: '14,488',                        icon: Image,        color: 'blue'   },
+  { label: 'Biodegradable Images', value: '12,565',                        icon: CheckCircle2, color: 'teal'   },
+  { label: 'Non-Bio Images',       value: '1,923',                         icon: Database,     color: 'red'    },
+  { label: 'Total Classes',        value: '2',                             icon: Layers,       color: 'purple' },
+  { label: 'Training Images',      value: '10,141',                        icon: Image,        color: 'green'  },
+  { label: 'Validation Images',    value: '2,174',                         icon: Image,        color: 'orange' },
+  { label: 'Testing Images',       value: '2,173',                         icon: Image,        color: 'blue'   },
+];
+
+const SPLIT_DATA = [
+  { name: 'Training',   count: 10141, color: '#2E7D32' },
+  { name: 'Validation', count: 2174,  color: '#1565C0' },
+  { name: 'Testing',    count: 2173,  color: '#6A1B9A' },
 ];
 
 const CHART_TOOLTIP_STYLE = {
@@ -37,13 +36,15 @@ const CHART_TOOLTIP_STYLE = {
 };
 
 const COLOR_MAP = {
-  green: 'from-green-500/10 to-emerald-500/5 border-green-400/20 text-green-700 dark:text-green-300',
-  blue: 'from-blue-500/10 to-indigo-500/5 border-blue-400/20 text-blue-700 dark:text-blue-300',
+  green:  'from-green-500/10 to-emerald-500/5 border-green-400/20 text-green-700 dark:text-green-300',
+  blue:   'from-blue-500/10 to-indigo-500/5 border-blue-400/20 text-blue-700 dark:text-blue-300',
   purple: 'from-purple-500/10 to-violet-500/5 border-purple-400/20 text-purple-700 dark:text-purple-300',
-  teal: 'from-teal-500/10 to-cyan-500/5 border-teal-400/20 text-teal-700 dark:text-teal-300',
+  teal:   'from-teal-500/10 to-cyan-500/5 border-teal-400/20 text-teal-700 dark:text-teal-300',
   orange: 'from-orange-500/10 to-amber-500/5 border-orange-400/20 text-orange-700 dark:text-orange-300',
-  red: 'from-red-500/10 to-rose-500/5 border-red-400/20 text-red-700 dark:text-red-300',
+  red:    'from-red-500/10 to-rose-500/5 border-red-400/20 text-red-700 dark:text-red-300',
 };
+
+const TOTAL = 14488;
 
 export default function Dataset() {
   return (
@@ -55,10 +56,10 @@ export default function Dataset() {
             🗃️ Dataset
           </span>
           <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-gray-900 dark:text-white mb-3">
-            PlastiVision <span className="text-gradient-green">Waste Dataset</span>
+            PlastiVision <span className="text-gradient-green">AI Waste Dataset</span>
           </h1>
           <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
-            A curated waste image dataset combining self-collected and public images across 10 waste classes.
+            A curated binary waste classification dataset combining self-collected and public images across 2 waste categories — Biodegradable and Non-Biodegradable.
           </p>
         </motion.div>
 
@@ -88,17 +89,40 @@ export default function Dataset() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="rounded-2xl bg-white/80 dark:bg-gray-900/70 border border-gray-200/60 dark:border-gray-700/60 shadow-lg p-6 mb-8"
+          className="rounded-2xl bg-white/80 dark:bg-gray-900/70 border border-gray-200/60 dark:border-gray-700/60 shadow-lg p-6 mb-6"
         >
           <h3 className="font-bold text-gray-900 dark:text-white font-heading text-xl mb-6">Class Distribution</h3>
-          <ResponsiveContainer width="100%" height={320}>
-            <BarChart data={CLASSES} margin={{ left: -15, right: 10, bottom: 20 }}>
+          <ResponsiveContainer width="100%" height={280}>
+            <BarChart data={CLASSES} margin={{ left: -15, right: 10, bottom: 10 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="name" tick={{ fill: '#9ca3af', fontSize: 10 }} angle={-35} textAnchor="end" height={70} />
+              <XAxis dataKey="name" tick={{ fill: '#9ca3af', fontSize: 13 }} />
               <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} />
-              <Tooltip contentStyle={CHART_TOOLTIP_STYLE} />
-              <Bar dataKey="count" radius={[6, 6, 0, 0]}>
+              <Tooltip contentStyle={CHART_TOOLTIP_STYLE} formatter={(v) => [v.toLocaleString(), 'Images']} />
+              <Bar dataKey="count" radius={[8, 8, 0, 0]}>
                 {CLASSES.map((entry, i) => (
+                  <Cell key={i} fill={entry.color} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </motion.div>
+
+        {/* Split Distribution Chart */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="rounded-2xl bg-white/80 dark:bg-gray-900/70 border border-gray-200/60 dark:border-gray-700/60 shadow-lg p-6 mb-8"
+        >
+          <h3 className="font-bold text-gray-900 dark:text-white font-heading text-xl mb-6">Dataset Split</h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={SPLIT_DATA} margin={{ left: -15, right: 10 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <XAxis dataKey="name" tick={{ fill: '#9ca3af', fontSize: 13 }} />
+              <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} />
+              <Tooltip contentStyle={CHART_TOOLTIP_STYLE} formatter={(v) => [v.toLocaleString(), 'Images']} />
+              <Bar dataKey="count" radius={[8, 8, 0, 0]}>
+                {SPLIT_DATA.map((entry, i) => (
                   <Cell key={i} fill={entry.color} />
                 ))}
               </Bar>
@@ -114,7 +138,7 @@ export default function Dataset() {
           className="rounded-2xl bg-white/80 dark:bg-gray-900/70 border border-gray-200/60 dark:border-gray-700/60 shadow-lg overflow-hidden"
         >
           <div className="px-6 py-4 border-b border-gray-200/60 dark:border-gray-700/60">
-            <h3 className="font-bold text-gray-900 dark:text-white font-heading">Dataset Classes</h3>
+            <h3 className="font-bold text-gray-900 dark:text-white font-heading">Dataset Overview</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -122,29 +146,44 @@ export default function Dataset() {
                 <tr>
                   <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Class</th>
                   <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Images (est.)</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Images</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">% of Dataset</th>
                   <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Distribution</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200/50 dark:divide-gray-700/50">
-                {CLASSES.map(cls => (
-                  <tr key={cls.name} className="hover:bg-gray-50/70 dark:hover:bg-gray-800/40 transition-colors">
-                    <td className="px-6 py-3 font-medium text-gray-900 dark:text-white">{cls.name}</td>
-                    <td className="px-6 py-3">
-                      <span className={`text-xs font-semibold px-2 py-1 rounded-full ${cls.type === 'Bio' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'}`}>
-                        {cls.type === 'Bio' ? 'Biodegradable' : 'Non-Biodegradable'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-3 text-gray-600 dark:text-gray-400">{cls.count}</td>
-                    <td className="px-6 py-3 w-48">
-                      <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${(cls.count / 342) * 100}%`, background: cls.color }} />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {CLASSES.map(cls => {
+                  const pct = ((cls.count / TOTAL) * 100).toFixed(1);
+                  return (
+                    <tr key={cls.name} className="hover:bg-gray-50/70 dark:hover:bg-gray-800/40 transition-colors">
+                      <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{cls.name}</td>
+                      <td className="px-6 py-4">
+                        <span className={`text-xs font-semibold px-2 py-1 rounded-full ${cls.type === 'Bio' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'}`}>
+                          {cls.type === 'Bio' ? 'Biodegradable' : 'Non-Biodegradable'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-gray-600 dark:text-gray-400 font-semibold">{cls.count.toLocaleString()}</td>
+                      <td className="px-6 py-4 text-gray-600 dark:text-gray-400">{pct}%</td>
+                      <td className="px-6 py-4 w-48">
+                        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div className="h-full rounded-full" style={{ width: `${pct}%`, background: cls.color }} />
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
+          </div>
+
+          {/* Footer: dataset source */}
+          <div className="px-6 py-4 border-t border-gray-200/60 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-800/30">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="font-semibold text-gray-700 dark:text-gray-300">Dataset Source:</span>{' '}
+              Self-Collected + Public Datasets &nbsp;|&nbsp;
+              <span className="font-semibold text-gray-700 dark:text-gray-300">Class imbalance handled via</span>{' '}
+              sklearn class_weight (no images deleted)
+            </p>
           </div>
         </motion.div>
       </div>
