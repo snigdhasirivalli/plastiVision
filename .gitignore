@@ -47,3 +47,4 @@ cnn/
 vit/
 # Environment files with secrets
 .env.local
+.env
