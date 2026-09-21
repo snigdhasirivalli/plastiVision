@@ -28,6 +28,7 @@ function saveScanToStorage(result) {
 
 // ─── API call ─────────────────────────────────────────────────────────────────
 import { predictImage } from '../services/api';
+import { classifyImageClientSide } from '../services/aiClassifier';
 
 const BACKEND_AVAILABLE_KEY = 'pv_backend_ok';
 
@@ -49,6 +50,7 @@ async function callPredictAPI(imageData, isBase64 = false) {
     bin: data.recommended_bin,
     tip: data.environmental_tip,
     time: data.prediction_time,
+    engine: data.engine || 'PlastiVision AI Hybrid Engine',
   };
 }
 
@@ -107,20 +109,39 @@ export default function Scan() {
     setApiError(null);
     try {
       let r;
-      if (imageCaptureRef.current) {
-        // Camera capture — pass base64 dataURL
-        r = await callPredictAPI(imageCaptureRef.current, true);
-      } else if (imageFileRef.current) {
-        // File upload — pass File object directly
-        r = await callPredictAPI(imageFileRef.current, false);
-      } else {
-        throw new Error('No image available. Please upload or capture first.');
+      try {
+        if (imageCaptureRef.current) {
+          // Camera capture — pass base64 dataURL
+          r = await callPredictAPI(imageCaptureRef.current, true);
+        } else if (imageFileRef.current) {
+          // File upload — pass File object directly
+          r = await callPredictAPI(imageFileRef.current, false);
+        } else {
+          throw new Error('No image available. Please upload or capture first.');
+        }
+      } catch (cloudErr) {
+        console.warn('[PlastiVision] Primary inference error, executing Edge AI classification:', cloudErr);
+        const source = imageCaptureRef.current || imageFileRef.current || preview;
+        if (source) {
+          const edge = await classifyImageClientSide(source);
+          r = {
+            object: edge.detected_object,
+            category: edge.waste_category,
+            confidence: parseFloat(edge.confidence),
+            bin: edge.recommended_bin,
+            tip: edge.environmental_tip,
+            time: edge.prediction_time,
+            engine: edge.engine || 'Edge AI (Instant Browser Inference)',
+          };
+        } else {
+          throw cloudErr;
+        }
       }
       saveScanToStorage(r);
       setResult(r);
     } catch (err) {
       console.error('[PlastiVision] Prediction error:', err);
-      setApiError(err.message || 'Failed to connect to the AI backend. Make sure Flask is running on port 5000.');
+      setApiError('Unable to analyze image. Please upload a clear image and try again.');
     } finally {
       setIsAnalyzing(false);
     }
@@ -146,9 +167,15 @@ export default function Scan() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-sm font-semibold mb-4">
-            🔍 AI Scan
-          </span>
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-semibold">
+              🔍 AI Scan
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 text-xs font-semibold border border-emerald-300 dark:border-emerald-700/50">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Hybrid AI Engine Active
+            </span>
+          </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-gray-900 dark:text-white mb-3">
             Scan Your <span className="text-gradient-green">Waste Item</span>
           </h1>
@@ -277,7 +304,7 @@ export default function Scan() {
                   <div className="spinner" />
                   <div>
                     <p className="text-white font-semibold font-heading">Analyzing Image...</p>
-                    <p className="text-primary-300 text-sm">Running Vision Transformer inference pipeline</p>
+                    <p className="text-primary-300 text-sm">Running PlastiVision AI classification pipeline</p>
                   </div>
                 </motion.div>
               )}

@@ -45,17 +45,15 @@ def index():
     return jsonify({"service": "PlastiVision AI Backend", "version": "1.0.0"}), 200
 
 
-# ── Load model on startup ─────────────────────────────────────────────────────
-print("[PlastiVision] Starting Flask server...")
-print("[PlastiVision] Loading best_model.keras (Custom CNN)...")
-init_model()
-print(f"[PlastiVision] Server ready at http://{FLASK_HOST}:{FLASK_PORT}")
-
 
 if __name__ == "__main__":
+    print("[PlastiVision] Starting Flask local server...")
+    init_model()
+    print(f"[PlastiVision] Server ready at http://{FLASK_HOST}:{FLASK_PORT}")
     app.run(
         host=FLASK_HOST,
         port=FLASK_PORT,
         debug=FLASK_DEBUG,
         use_reloader=False,    # Disable reloader so model loads only once
     )
+

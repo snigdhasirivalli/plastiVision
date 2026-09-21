@@ -104,7 +104,9 @@ export default function ResultCard({ result }) {
           {/* Powered by */}
           <div className="flex items-center gap-2 justify-end">
             <Zap className="w-3 h-3 text-primary-500" />
-            <span className="text-xs text-gray-400">Powered by PlastiVision AI</span>
+            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+              {result.engine || 'PlastiVision AI Hybrid Engine'}
+            </span>
           </div>
         </div>
       </div>

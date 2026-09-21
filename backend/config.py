@@ -21,7 +21,9 @@ DATASET_DIR     = os.path.join(PROJECT_ROOT, "dataset", "raw")
 SAVED_MODEL_DIR = os.path.join(BASE_DIR, "saved_model")
 EVAL_DIR        = os.path.join(BASE_DIR, "saved_model", "evaluation")
 
-MODEL_PATH       = os.path.join(SAVED_MODEL_DIR, "best_model.keras")
+KERAS_MODEL_PATH = os.path.join(SAVED_MODEL_DIR, "best_model.keras")
+PTH_MODEL_PATH   = os.path.join(SAVED_MODEL_DIR, "best_model.pth")
+MODEL_PATH       = PTH_MODEL_PATH if os.path.isfile(PTH_MODEL_PATH) else KERAS_MODEL_PATH
 CLASS_NAMES_PATH = os.path.join(SAVED_MODEL_DIR, "class_names.json")
 HISTORY_PATH     = os.path.join(SAVED_MODEL_DIR, "training_history.json")
 
