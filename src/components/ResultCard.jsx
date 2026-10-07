@@ -47,12 +47,6 @@ export default function ResultCard({ result }) {
       <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Left: Key Results */}
         <div className="space-y-3">
-          {/* Object */}
-          <div className="rounded-xl bg-gray-50 dark:bg-gray-800/60 p-3 border border-gray-200/50 dark:border-gray-700/50">
-            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Detected Object</p>
-            <p className="text-xl font-bold text-gray-900 dark:text-white font-heading">{object}</p>
-          </div>
-
           {/* Category */}
           <div className={`rounded-xl p-3 border ${catCfg.bg} ${catCfg.border}`}>
             <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Waste Category</p>
