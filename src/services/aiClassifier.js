@@ -83,8 +83,8 @@ async function runTFJSInference(imgElement) {
  * Conservative: only classifies as Biodegradable with very strong organic signals.
  */
 function heuristicFallback(pixels, pixelCount) {
-  let deepGreenCount = 0, earthyBrownCount = 0, yellowOrangeCount = 0;
-  let plasticGreyCount = 0, coolBlueCount = 0, specularCount = 0;
+  let greenCount = 0;
+  let syntheticCount = 0;
 
   for (let i = 0; i < pixels.length; i += 4) {
     const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
@@ -92,29 +92,33 @@ function heuristicFallback(pixels, pixelCount) {
     const minC = Math.min(r, g, b);
     const sat  = maxC === 0 ? 0 : (maxC - minC) / maxC;
 
-    if (g > r + 30 && g > b + 30 && sat > 0.20)               deepGreenCount++;
-    if (r > g + 20 && r > b + 30 && r > 80 && r < 200 && sat > 0.25) earthyBrownCount++;
-    if (r > 160 && g > 100 && b < 80 && r > b + 90 && sat > 0.35)    yellowOrangeCount++;
-    if (sat < 0.12 && r > 60 && r < 220 && Math.abs(r-g) < 18 && Math.abs(g-b) < 18) plasticGreyCount++;
-    if (b > r + 25 && b > g + 10 && sat > 0.15)               coolBlueCount++;
-    if (r > 235 && g > 235 && b > 235)                         specularCount++;
+    // Organic Leaf/Plant green signal (vibrant foliage)
+    if (g > r + 25 && g > b + 20 && sat > 0.22) {
+      greenCount++;
+    }
+
+    // Synthetic Cues: specular highlight, low saturation neutrals, cool blues/cyans, glossy reflections
+    const isSpecular = r > 220 && g > 220 && b > 220;
+    const isNeutralGrey = sat < 0.15 && maxC > 40 && maxC < 235;
+    const isCoolBlue = b > r + 15 && b > g + 10;
+    if (isSpecular || isNeutralGrey || isCoolBlue) {
+      syntheticCount++;
+    }
   }
 
-  const dg = deepGreenCount / pixelCount;
-  const eb = earthyBrownCount / pixelCount;
-  const yo = yellowOrangeCount / pixelCount;
-  const pg = plasticGreyCount / pixelCount;
-  const cb = coolBlueCount / pixelCount;
-  const sp = specularCount / pixelCount;
+  const greenRatio = greenCount / pixelCount;
+  const syntheticRatio = syntheticCount / pixelCount;
 
-  const organicScore   = dg * 6.0 + eb * 4.5 + yo * 4.0;
-  const syntheticScore = pg * 5.0 + sp * 6.0 + cb * 4.5;
+  // STRICT RULE: Only classify as Biodegradable if vibrant green leaf/plant signal is predominant
+  // and synthetic cues are low. Otherwise, default to Non_Biodegradable.
+  const isBiodegradable = greenRatio > 0.14 && greenRatio > syntheticRatio * 2.0;
 
-  const strongOrganic = dg > 0.08 || eb > 0.12 || yo > 0.10;
-  const isBiodegradable = strongOrganic && organicScore > syntheticScore * 1.5;
-
-  const margin = Math.abs(organicScore - syntheticScore);
-  const confidence = parseFloat(Math.min(92.0, 78.0 + margin * 3.0).toFixed(2));
+  let confidence;
+  if (isBiodegradable) {
+    confidence = parseFloat(Math.min(98.5, 85.0 + greenRatio * 50.0).toFixed(2));
+  } else {
+    confidence = parseFloat(Math.min(97.8, 88.0 + (1.0 - greenRatio) * 10.0).toFixed(2));
+  }
 
   return { isBiodegradable, confidence };
 }
