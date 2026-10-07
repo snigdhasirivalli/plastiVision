@@ -136,7 +136,9 @@ function imageToTensor(imgElement) {
  */
 async function runTFJSInference(imgElement) {
   const model = await loadTFJSModel();
-  if (!model) return null;
+  if (!model) {
+    throw new Error('Neural network failed to load in this browser');
+  }
 
   const inputTensor = imageToTensor(imgElement);
   const predictions = model.predict(inputTensor);
@@ -179,21 +181,13 @@ export async function classifyImageClientSide(fileOrBlobOrUrl) {
 
     img.onload = async () => {
       try {
-        // Run neural network inference
+        // Run neural network inference (throws if model failed to load,
+        // letting callers fall back to network prediction tiers)
         const tfResult = await runTFJSInference(img);
 
-        let isBiodegradable, confidence, engine;
-
-        if (tfResult) {
-          isBiodegradable = tfResult.isBiodegradable;
-          confidence      = tfResult.confidence;
-          engine          = 'Trained CNN Neural Network (In-Browser TF.js)';
-        } else {
-          // Conservative fallback if webgl context is unavailable
-          isBiodegradable = false;
-          confidence      = 95.0;
-          engine          = 'Edge AI (Deep Neural Net Guard)';
-        }
+        const isBiodegradable = tfResult.isBiodegradable;
+        const confidence      = tfResult.confidence;
+        const engine          = 'Trained CNN Neural Network (In-Browser TF.js)';
 
         const category       = isBiodegradable ? 'Biodegradable' : 'Non_Biodegradable';
         const recommendedBin = isBiodegradable ? 'Compost Bin'   : 'Recycle Bin';

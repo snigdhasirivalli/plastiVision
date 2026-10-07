@@ -115,12 +115,25 @@ export const FALLBACK_MODEL_PERF = {
 /**
  * POST /api/predict
  * Multi-Tier Resilient Prediction:
- * 1. Try configured Cloud backend (Render Flask)
- * 2. Try Vercel Serverless /api/predict endpoint
- * 3. Gracefully fall back to Client-Side Edge AI Classifier
+ * 1. Trained CNN inference in-browser via TF.js (instant, offline-capable)
+ * 2. Configured Cloud backend (Render Flask) if VITE_API_URL is set
+ * 3. Vercel Serverless /api/predict endpoint
  */
 export const predictImage = async (imageFileOrBlob) => {
-  // Tier 1: Try primary API client (Render cloud)
+  // Tier 1: Trained CNN running in the browser via TF.js
+  try {
+    const edge = await classifyImageClientSide(imageFileOrBlob);
+    if (edge) {
+      return {
+        ...edge,
+        engine: edge.engine || 'Trained CNN Neural Network (In-Browser TF.js)',
+      };
+    }
+  } catch (err) {
+    console.warn('[PlastiVision] In-browser CNN inference failed, trying network backends...', err.message);
+  }
+
+  // Tier 2: Try primary API client (Render cloud)
   if (API_BASE_URL) {
     try {
       const formData = new FormData();
@@ -140,7 +153,7 @@ export const predictImage = async (imageFileOrBlob) => {
     }
   }
 
-  // Tier 2: Try relative Vercel Serverless API
+  // Tier 3: Try relative Vercel Serverless API
   if (typeof window !== 'undefined') {
     try {
       const formData = new FormData();
@@ -156,13 +169,11 @@ export const predictImage = async (imageFileOrBlob) => {
         };
       }
     } catch (err) {
-      console.warn('[PlastiVision] Serverless API unavailable, switching to Edge AI browser engine...', err.message);
+      console.warn('[PlastiVision] Serverless API unavailable...', err.message);
     }
   }
 
-  // Tier 3: Instant Browser Edge AI Classifier (Zero-downtime guaranteed)
-  console.info('[PlastiVision] Executing client-side Edge AI classification...');
-  return await classifyImageClientSide(imageFileOrBlob);
+  throw new Error('All prediction engines failed. Please try again.');
 };
 
 /**

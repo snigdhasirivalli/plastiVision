@@ -28,31 +28,6 @@ function saveScanToStorage(result) {
 
 // ─── API call ─────────────────────────────────────────────────────────────────
 import { predictImage } from '../services/api';
-import { classifyImageClientSide } from '../services/aiClassifier';
-
-const BACKEND_AVAILABLE_KEY = 'pv_backend_ok';
-
-async function callPredictAPI(imageData, isBase64 = false) {
-  let fileOrBlob;
-  if (isBase64) {
-    // Convert base64 dataURL to Blob for camera captures
-    const res = await fetch(imageData);
-    fileOrBlob = await res.blob();
-  } else {
-    fileOrBlob = imageData;
-  }
-  
-  const data = await predictImage(fileOrBlob);
-  return {
-    object: data.detected_object,
-    category: data.waste_category,
-    confidence: parseFloat(data.confidence),
-    bin: data.recommended_bin,
-    tip: data.environmental_tip,
-    time: data.prediction_time,
-    engine: data.engine || 'PlastiVision AI Hybrid Engine',
-  };
-}
 
 export default function Scan() {
   const [mode, setMode] = useState('upload'); // 'camera' | 'upload'
@@ -108,35 +83,30 @@ export default function Scan() {
     setResult(null);
     setApiError(null);
     try {
-      let r;
-      try {
-        if (imageCaptureRef.current) {
-          // Camera capture — pass base64 dataURL
-          r = await callPredictAPI(imageCaptureRef.current, true);
-        } else if (imageFileRef.current) {
-          // File upload — pass File object directly
-          r = await callPredictAPI(imageFileRef.current, false);
-        } else {
-          throw new Error('No image available. Please upload or capture first.');
-        }
-      } catch (cloudErr) {
-        console.warn('[PlastiVision] Primary inference error, executing Edge AI classification:', cloudErr);
-        const source = imageCaptureRef.current || imageFileRef.current || preview;
-        if (source) {
-          const edge = await classifyImageClientSide(source);
-          r = {
-            object: edge.detected_object,
-            category: edge.waste_category,
-            confidence: parseFloat(edge.confidence),
-            bin: edge.recommended_bin,
-            tip: edge.environmental_tip,
-            time: edge.prediction_time,
-            engine: edge.engine || 'Edge AI (Instant Browser Inference)',
-          };
-        } else {
-          throw cloudErr;
-        }
+      let fileOrBlob;
+      if (imageCaptureRef.current) {
+        // Camera capture — convert base64 dataURL to Blob
+        const res = await fetch(imageCaptureRef.current);
+        fileOrBlob = await res.blob();
+      } else if (imageFileRef.current) {
+        // File upload — pass File object directly
+        fileOrBlob = imageFileRef.current;
+      } else {
+        throw new Error('No image available. Please upload or capture first.');
       }
+
+      // predictImage runs the trained CNN in-browser first, then falls back
+      // to network backends if the neural network can't load
+      const data = await predictImage(fileOrBlob);
+      const r = {
+        object: data.detected_object,
+        category: data.waste_category,
+        confidence: parseFloat(data.confidence),
+        bin: data.recommended_bin,
+        tip: data.environmental_tip,
+        time: data.prediction_time,
+        engine: data.engine || 'PlastiVision AI Hybrid Engine',
+      };
       saveScanToStorage(r);
       setResult(r);
     } catch (err) {
