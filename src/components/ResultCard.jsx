@@ -38,7 +38,7 @@ export default function ResultCard({ result }) {
         </div>
         <div className="ml-auto text-right">
           <p className="text-primary-200 text-xs flex items-center gap-1">
-            <Clock className="w-3 h-3" /> {time}s
+            <Clock className="w-3 h-3" /> {typeof time === 'string' && time.endsWith('ms') ? time : `${time}s`}
           </p>
           <p className="text-white text-xs font-semibold">Prediction Time</p>
         </div>
