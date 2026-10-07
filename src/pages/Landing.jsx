@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Camera, Upload, Zap, Tags, Recycle, Cpu } from 'lucide-react';
 import FeatureCard from '../components/FeatureCard';
 import HowItWorks from '../components/HowItWorks';
+import ModelComparison from '../components/ModelComparison';
 
 const RECENT_SCANS = [
   { object: 'Plastic Bottle', bin: 'Recycle Bin', confidence: 98, category: 'Non-Biodegradable', emoji: '🍶' },
@@ -193,6 +194,9 @@ export default function Landing() {
 
       {/* ─── HOW IT WORKS ─── */}
       <HowItWorks />
+
+      {/* ─── CNN vs ViT COMPARISON ─── */}
+      <ModelComparison />
 
       {/* ─── RECENT SCANS ─── */}
       <section className="py-20 bg-white dark:bg-gray-950">
