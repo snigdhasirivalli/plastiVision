@@ -1,0 +1,296 @@
+[
+  {
+    "layer": "conv2d_1",
+    "weight_index": 0,
+    "shape": [
+      3,
+      3,
+      3,
+      32
+    ],
+    "size": 864,
+    "offset": 0,
+    "bytes": 3456
+  },
+  {
+    "layer": "conv2d_1",
+    "weight_index": 1,
+    "shape": [
+      32
+    ],
+    "size": 32,
+    "offset": 3456,
+    "bytes": 128
+  },
+  {
+    "layer": "batch_norm_1",
+    "weight_index": 0,
+    "shape": [
+      32
+    ],
+    "size": 32,
+    "offset": 3584,
+    "bytes": 128
+  },
+  {
+    "layer": "batch_norm_1",
+    "weight_index": 1,
+    "shape": [
+      32
+    ],
+    "size": 32,
+    "offset": 3712,
+    "bytes": 128
+  },
+  {
+    "layer": "batch_norm_1",
+    "weight_index": 2,
+    "shape": [
+      32
+    ],
+    "size": 32,
+    "offset": 3840,
+    "bytes": 128
+  },
+  {
+    "layer": "batch_norm_1",
+    "weight_index": 3,
+    "shape": [
+      32
+    ],
+    "size": 32,
+    "offset": 3968,
+    "bytes": 128
+  },
+  {
+    "layer": "conv2d_2",
+    "weight_index": 0,
+    "shape": [
+      3,
+      3,
+      32,
+      64
+    ],
+    "size": 18432,
+    "offset": 4096,
+    "bytes": 73728
+  },
+  {
+    "layer": "conv2d_2",
+    "weight_index": 1,
+    "shape": [
+      64
+    ],
+    "size": 64,
+    "offset": 77824,
+    "bytes": 256
+  },
+  {
+    "layer": "batch_norm_2",
+    "weight_index": 0,
+    "shape": [
+      64
+    ],
+    "size": 64,
+    "offset": 78080,
+    "bytes": 256
+  },
+  {
+    "layer": "batch_norm_2",
+    "weight_index": 1,
+    "shape": [
+      64
+    ],
+    "size": 64,
+    "offset": 78336,
+    "bytes": 256
+  },
+  {
+    "layer": "batch_norm_2",
+    "weight_index": 2,
+    "shape": [
+      64
+    ],
+    "size": 64,
+    "offset": 78592,
+    "bytes": 256
+  },
+  {
+    "layer": "batch_norm_2",
+    "weight_index": 3,
+    "shape": [
+      64
+    ],
+    "size": 64,
+    "offset": 78848,
+    "bytes": 256
+  },
+  {
+    "layer": "conv2d_3",
+    "weight_index": 0,
+    "shape": [
+      3,
+      3,
+      64,
+      128
+    ],
+    "size": 73728,
+    "offset": 79104,
+    "bytes": 294912
+  },
+  {
+    "layer": "conv2d_3",
+    "weight_index": 1,
+    "shape": [
+      128
+    ],
+    "size": 128,
+    "offset": 374016,
+    "bytes": 512
+  },
+  {
+    "layer": "batch_norm_3",
+    "weight_index": 0,
+    "shape": [
+      128
+    ],
+    "size": 128,
+    "offset": 374528,
+    "bytes": 512
+  },
+  {
+    "layer": "batch_norm_3",
+    "weight_index": 1,
+    "shape": [
+      128
+    ],
+    "size": 128,
+    "offset": 375040,
+    "bytes": 512
+  },
+  {
+    "layer": "batch_norm_3",
+    "weight_index": 2,
+    "shape": [
+      128
+    ],
+    "size": 128,
+    "offset": 375552,
+    "bytes": 512
+  },
+  {
+    "layer": "batch_norm_3",
+    "weight_index": 3,
+    "shape": [
+      128
+    ],
+    "size": 128,
+    "offset": 376064,
+    "bytes": 512
+  },
+  {
+    "layer": "conv2d_4",
+    "weight_index": 0,
+    "shape": [
+      3,
+      3,
+      128,
+      256
+    ],
+    "size": 294912,
+    "offset": 376576,
+    "bytes": 1179648
+  },
+  {
+    "layer": "conv2d_4",
+    "weight_index": 1,
+    "shape": [
+      256
+    ],
+    "size": 256,
+    "offset": 1556224,
+    "bytes": 1024
+  },
+  {
+    "layer": "batch_norm_4",
+    "weight_index": 0,
+    "shape": [
+      256
+    ],
+    "size": 256,
+    "offset": 1557248,
+    "bytes": 1024
+  },
+  {
+    "layer": "batch_norm_4",
+    "weight_index": 1,
+    "shape": [
+      256
+    ],
+    "size": 256,
+    "offset": 1558272,
+    "bytes": 1024
+  },
+  {
+    "layer": "batch_norm_4",
+    "weight_index": 2,
+    "shape": [
+      256
+    ],
+    "size": 256,
+    "offset": 1559296,
+    "bytes": 1024
+  },
+  {
+    "layer": "batch_norm_4",
+    "weight_index": 3,
+    "shape": [
+      256
+    ],
+    "size": 256,
+    "offset": 1560320,
+    "bytes": 1024
+  },
+  {
+    "layer": "dense_256",
+    "weight_index": 0,
+    "shape": [
+      256,
+      256
+    ],
+    "size": 65536,
+    "offset": 1561344,
+    "bytes": 262144
+  },
+  {
+    "layer": "dense_256",
+    "weight_index": 1,
+    "shape": [
+      256
+    ],
+    "size": 256,
+    "offset": 1823488,
+    "bytes": 1024
+  },
+  {
+    "layer": "output_softmax",
+    "weight_index": 0,
+    "shape": [
+      256,
+      2
+    ],
+    "size": 512,
+    "offset": 1824512,
+    "bytes": 2048
+  },
+  {
+    "layer": "output_softmax",
+    "weight_index": 1,
+    "shape": [
+      2
+    ],
+    "size": 2,
+    "offset": 1826560,
+    "bytes": 8
+  }
+]
