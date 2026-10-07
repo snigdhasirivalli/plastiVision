@@ -98,10 +98,11 @@ export async function classifyImageClientSide(fileOrBlobOrUrl) {
 
         // Classification decision boundary
         // Organic food/cake/bread/fruits have high warmth or high green, moderate-high variance, low specular
-        const organicScore = (warmRatio * 3.5) + (greenRatio * 4.0) + (avgVariance / 40) - (coolRatio * 2.5) - (highlightRatio * 2.0);
-        const syntheticScore = (coolRatio * 3.5) + (highlightRatio * 3.0) + (Math.abs(avgR - avgB) < 15 ? 0.3 : 0);
+        const organicScore = (warmRatio * 3.0) + (greenRatio * 3.5) + (avgVariance / 50);
+        const syntheticScore = (coolRatio * 4.0) + (highlightRatio * 4.0) + (Math.abs(avgR - avgB) < 20 ? 0.4 : 0);
 
-        const isBiodegradable = organicScore >= syntheticScore || warmRatio > 0.12 || greenRatio > 0.08;
+        // Ensure we don't aggressively default to Biodegradable for minor warm/green tints
+        const isBiodegradable = (organicScore > syntheticScore * 1.2) && (warmRatio > 0.25 || greenRatio > 0.2);
 
         let detectedObject = 'Organic Waste';
         let category = isBiodegradable ? 'Biodegradable' : 'Non_Biodegradable';

@@ -46,7 +46,7 @@ function analyzeImageBytes(buffer) {
   const warmRatio = warmTones / sampleCount;
 
   // Most food items, pastry, cake (like in user's image), fruit have rich warm and textured tones
-  const isOrganic = warmRatio > 0.32 || (avgByte > 110 && avgByte < 190);
+  const isOrganic = warmRatio > 0.32 && (avgByte > 110 && avgByte < 190);
 
   if (isOrganic) {
     const conf = (94.0 + (Math.abs(avgByte - 145) % 4.5)).toFixed(2);
