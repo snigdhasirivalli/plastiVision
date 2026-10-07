@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, AreaChart, Area
 } from 'recharts';
-import { Target, Award, BarChart2, Zap, CheckCircle2, Clock } from 'lucide-react';
+import { Target, Award, BarChart2, Zap, CheckCircle2, Clock, Sparkles, ArrowRight } from 'lucide-react';
 import { fetchModelPerformance } from '../services/api';
 
 // ── Static fallbacks (shown until API responds) ───────────────────────────────
@@ -142,12 +143,21 @@ export default function ModelPerformance() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-8 flex justify-center"
+          className="mb-8 flex flex-col sm:flex-row items-center justify-center gap-3"
         >
           <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 text-green-700 dark:text-green-300 font-semibold text-sm shadow-md">
             <CheckCircle2 className="w-4 h-4" />
             Production Model: Custom CNN — Accuracy 95.63%
           </div>
+
+          <Link
+            to="/gan-lab"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold text-sm shadow-md transition-all group"
+          >
+            <Sparkles className="w-4 h-4 text-emerald-200" />
+            <span>Interactive GAN & Robustness Lab</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </motion.div>
 
         {/* Key Metrics */}

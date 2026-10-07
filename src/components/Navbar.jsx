@@ -9,6 +9,7 @@ const navLinks = [
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/dataset', label: 'Dataset' },
   { to: '/model', label: 'Model Performance' },
+  { to: '/gan-lab', label: 'GAN Lab' },
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },
 ];

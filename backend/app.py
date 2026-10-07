@@ -24,6 +24,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from config import FLASK_HOST, FLASK_PORT, FLASK_DEBUG
 from api.predict import predict_bp, init_model
+from api.gan_routes import gan_bp
 
 app = Flask(__name__)
 
@@ -37,7 +38,10 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 #   GET  http://127.0.0.1:5000/api/health
 #   GET  http://127.0.0.1:5000/api/dashboard
 #   GET  http://127.0.0.1:5000/api/model-performance
+#   GET  http://127.0.0.1:5000/api/gan/metrics
+#   POST http://127.0.0.1:5000/api/gan/generate
 app.register_blueprint(predict_bp, url_prefix="/api")
+app.register_blueprint(gan_bp, url_prefix="/api")
 
 # ── Root info ─────────────────────────────────────────────────────────────────
 @app.route("/", methods=["GET"])

@@ -10,6 +10,7 @@ import ModelPerformance from './pages/ModelPerformance';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import DatasetCollection from './pages/DatasetCollection';
+import GanLab from './pages/GanLab';
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -38,6 +39,7 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dataset" element={<Dataset />} />
             <Route path="/model" element={<ModelPerformance />} />
+            <Route path="/gan-lab" element={<GanLab />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/dataset-collection" element={<DatasetCollection />} />
